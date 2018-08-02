@@ -225,11 +225,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param center is current latlong
      */
     public void Draw_Map(LatLng center) {
+        mMap.clear();
         PolygonOptions rectOptions = new PolygonOptions();
-        List<LatLng> val = generateLatlongToMakePolygon(center);
-        rectOptions.addAll(val);
+        List<LatLng> val1 = generateLatlongToMakePolygon(center, 1);
+        List<LatLng> val2 = generateLatlongToMakePolygon(center, 2);
+        rectOptions.addAll(val1);
+        //rectOptions.addAll(val2);
         rectOptions.strokeColor(Color.BLACK);
         rectOptions.strokeWidth(2);
+      rectOptions.addHole(val2);
         Polygon polygon = mMap.addPolygon(rectOptions);
         polygon.setFillColor(0x3F000000);
     }
@@ -238,9 +242,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * method tp generate eight latlong point
      * @param center is current latlong
      */
-    private List<LatLng> generateLatlongToMakePolygon(LatLng center) {
+    private List<LatLng> generateLatlongToMakePolygon(LatLng center, int code) {
+        double radius;
+        if (code == 1)
+            radius = 75000;
+        else
+            radius = 750;
         List<LatLng> val = new ArrayList<>();
-        double radius = 750;
         for (int angle = 0; angle<360; ){
             LatLng latLng = SphericalUtil.computeOffset(center, radius * Math.sqrt(2), angle);
             val.add(latLng);
